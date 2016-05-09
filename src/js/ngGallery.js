@@ -28,44 +28,106 @@
 
         var template_url = defaults.templateUrl;
         // Set the default template
-        $templateCache.put(template_url,
-            '<div class="{{ baseClass }}">' +
-            '  <div ng-repeat="i in images">' +
-            '    <img ng-src="{{ i.thumb }}" class="{{ thumbClass }}" ng-click="openGallery($index)" alt="Image {{ $index + 1 }}" />' +
-            '  </div>' +
-            '</div>' +
-            '<div class="ng-overlay" ng-show="opened">' +
-            '</div>' +
-            '<div class="ng-gallery-content" unselectable="on" ng-show="opened" ng-swipe-left="nextImage()" ng-swipe-right="prevImage()">' +
-            '  <div class="uil-ring-css" ng-show="loading"><div></div></div>' +
-            '<a href="{{getImageDownloadSrc()}}" target="_blank" ng-show="showImageDownloadButton()" class="download-image"><i class="fa fa-download"></i></a>' +
-            '  <a class="close-popup" ng-click="closeGallery()"><i class="fa fa-close"></i></a>' +
-            '  <a class="nav-left" ng-click="prevImage()"><i class="fa fa-angle-left"></i></a>' +
-            '  <img ondragstart="return false;" draggable="false" ng-src="{{ img }}" ng-click="nextImage()" ng-show="!loading" class="effect" />' +
-            '  <a class="nav-right" ng-click="nextImage()"><i class="fa fa-angle-right"></i></a>' +
-            '  <span class="info-text">{{ index + 1 }}/{{ images.length }} - {{ description }}</span>' +
-            '  <div class="ng-thumbnails-wrapper">' +
-            '    <div class="ng-thumbnails slide-left">' +
-            '      <div ng-repeat="i in images">' +
-            '        <img ng-src="{{ i.thumb }}" ng-class="{\'active\': index === $index}" ng-click="changeImage($index)" />' +
-            '      </div>' +
-            '    </div>' +
-            '  </div>' +
-            '</div>'
-        );
+        var template = `
+        <div class="{{ baseClass }}">
+        <div ng-repeat="i in images">
+          <img
+            ng-src="{{ i.thumb }}"
+            class="{{ thumbClass }}"
+            ng-click="openGallery($index)"
+            alt="Image {{ $index + 1 }}" />
+        </div>
+        <div
+          ng-if="addMore"
+          class="ng-gallery-add">
+          <i
+            class="fa fa-plus"
+            ng-click="showAddImageDialoge()"> </i>
+        </div>
+      </div>
+      <div
+        class="ng-overlay"
+        ng-show="opened || addMoreOpened"></div>
+      <div
+        class="ng-gallery-content"
+        unselectable="on"
+        ng-show="opened"
+        ng-swipe-left="nextImage()"
+        ng-swipe-right="prevImage()">
+        <div
+          class="uil-ring-css"
+          ng-show="loading">
+          <div></div>
+        </div>
+        <a
+          href="{{getImageDownloadSrc()}}"
+          target="_blank"
+          ng-show="showImageDownloadButton()"
+          class="download-image">
+          <i class="fa fa-download"></i>
+        </a>
+        <a
+          class="close-popup"
+          ng-click="closeGallery()">
+          <i class="fa fa-close"></i>
+        </a>
+        <a
+          class="nav-left"
+          ng-click="prevImage()">
+          <i class="fa fa-angle-left"></i>
+        </a>
+        <img
+          ondragstart="return false;"
+          draggable="false"
+          ng-src="{{ img }}"
+          ng-click="nextImage()"
+          ng-show="!loading"
+          class="effect" />
+        <a
+          class="nav-right"
+          ng-click="nextImage()">
+          <i class="fa fa-angle-right"></i>
+        </a>
+        <span class="info-text">{{ index + 1 }}/{{ images.length }} - {{ description }}</span>
+        <div class="ng-thumbnails-wrapper">
+          <div class="ng-thumbnails slide-left">
+            <div ng-repeat="i in images">
+              <img
+                ng-src="{{ i.thumb }}"
+                ng-class="{'active': index === $index}"
+                ng-click="changeImage($index)" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        unselectable="on"
+        ng-show="addMoreOpened">
+        <form>
+          <input type="file" />
+          <button type="button">Add selected images</button>
+        </form>
+      </div>
+        `;
 
+        $templateCache.put(template_url, template);
+        
         return {
             restrict: 'EA',
             scope: {
                 images: '=',
                 thumbsNum: '@',
-                hideOverflow: '='
+                hideOverflow: '=',
+                addMore: "="
             },
             controller: [
                 '$scope',
                 function ($scope) {
                     $scope.$on('openGallery', function (e, args) {
                         $scope.openGallery(args.index);
+                    });
+                    $scope.$on('addImage', function (e, args) {
+                      $scope.addImage();
                     });
                 }
             ],
@@ -85,6 +147,8 @@
 
                 scope.index = 0;
                 scope.opened = false;
+                
+                scope.addMoreOpened = false;
 
                 scope.thumb_wrapper_width = 0;
                 scope.thumbs_width = 0;
@@ -151,6 +215,13 @@
                     showImage(scope.index);
                 };
 
+                scope.showAddImageDialoge = function() {
+                  scope.addMoreOpened = true;
+                  if (scope.hideOverflow) {
+                    $('body').css({overflow: 'hidden'});
+                  }                  
+                };
+                
                 scope.openGallery = function (i) {
                     if (typeof i !== undefined) {
                         scope.index = i;
