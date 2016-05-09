@@ -42,7 +42,7 @@
           class="ng-gallery-add">
           <i
             class="fa fa-plus"
-            ng-click="showAddImageDialoge()"> </i>
+            ng-click="showAddImageDialog()"> </i>
         </div>
       </div>
       <div
@@ -102,9 +102,15 @@
       </div>
       <div
         unselectable="on"
+        class="ng-gallery-content"
         ng-show="addMoreOpened">
+        <a
+          class="close-popup"
+          ng-click="closeAddImageDialog()">
+          <i class="fa fa-close"></i>
+        </a>  
         <form>
-          <input type="file" />
+          <input type="file" multiple accept='image/*' />
           <button type="button">Add selected images</button>
         </form>
       </div>
@@ -215,13 +221,20 @@
                     showImage(scope.index);
                 };
 
-                scope.showAddImageDialoge = function() {
+                scope.showAddImageDialog = function() {
                   scope.addMoreOpened = true;
                   if (scope.hideOverflow) {
                     $('body').css({overflow: 'hidden'});
                   }                  
                 };
                 
+                scope.closeAddImageDialog = function () {
+                  scope.addMoreOpened = false;
+                  if (scope.hideOverflow) {
+                      $('body').css({overflow: ''});
+                  }
+              };
+              
                 scope.openGallery = function (i) {
                     if (typeof i !== undefined) {
                         scope.index = i;
