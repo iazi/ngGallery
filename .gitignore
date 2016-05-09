@@ -1,3 +1,6 @@
 /bower_components/
 index.html
 src/js/*.html
+#Allow index.html inside examples
+!examples/**/index.html
+
