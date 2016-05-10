@@ -7,7 +7,7 @@
   ],
   "description": "AngularJS Photo Gallery Directive, derived from https://github.com/jkuri/ngGallery",
   "main": [
-    "src/js/ngGallery.js", 
+    "src/js/ngGallery.js",
     "src/css/ngGallery.css"
   ],
   "keywords": [
@@ -28,6 +28,7 @@
     "images"
   ],
   "dependencies": {
-    "angular": "~1.4.0"
+    "angular": "~1.4.0",
+    "angular-file-upload": "^2.2.0"
   }
 }

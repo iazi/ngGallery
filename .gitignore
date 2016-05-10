@@ -3,4 +3,4 @@ index.html
 src/js/*.html
 #Allow index.html inside examples
 !examples/**/index.html
-
+app/bower_components/

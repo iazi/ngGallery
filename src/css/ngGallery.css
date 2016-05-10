@@ -23,6 +23,8 @@
 	margin-top:11px;
 }
 
+
+
 img.ng-thumb {
   height: 50px;
   float: left;
@@ -48,7 +50,7 @@ img.ng-thumb {
   -webkit-user-drag: none;
 }
 
-.ng-gallery-content { 
+.ng-gallery-content, .ng-gallery-file-upload-form { 
   position: fixed;
   top: 0;
   left: 0;
@@ -56,6 +58,13 @@ img.ng-thumb {
   height: 100%;
   z-index: 10000;
   text-align: center;
+}
+
+.ng-gallery-file-upload-control {
+  	background-color: white;
+  	padding: 20px;
+	overflow-y: auto;
+    height: 90vh;  	
 }
 
 .ng-gallery-content > a.close-popup {
